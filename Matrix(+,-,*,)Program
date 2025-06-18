@@ -1,0 +1,96 @@
+import 'package:flutter/material.dart';
+import 'package:math_expressions/math_expressions.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: HomePage(),
+    ); // MaterialApp
+  }
+}
+
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final TextEditingController num1Controller = TextEditingController();
+  final TextEditingController num2Controller = TextEditingController();
+  String result = "";
+
+  void calculate(String operator) {
+    double num1 = double.tryParse(num1Controller.text) ?? 0;
+    double num2 = double.tryParse(num2Controller.text) ?? 0;
+
+    double res = 0;
+
+    switch (operator) {
+      case '+':
+        res = num1 + num2;
+        break;
+      case '-':
+        res = num1 - num2;
+        break;
+      case '*':
+        res = num1 * num2;
+        break;
+      case '/':
+        res = num2 != 0 ? num1 / num2 : double.nan;
+        break;
+    }
+
+    setState(() {
+      result = (res % 1 == 0) ? res.toInt().toString() : res.toStringAsFixed(2);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Simple Calculator")),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            TextField(
+              controller: num1Controller,
+              decoration: InputDecoration(labelText: "Enter first number"),
+              keyboardType: TextInputType.number,
+            ),
+            TextField(
+              controller: num2Controller,
+              decoration: InputDecoration(labelText: "Enter second number"),
+              keyboardType: TextInputType.number,
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                ElevatedButton(onPressed: () => calculate('+'), child: Text('+')),
+                ElevatedButton(onPressed: () => calculate('-'), child: Text('-')),
+                ElevatedButton(onPressed: () => calculate('*'), child: Text('*')),
+                ElevatedButton(onPressed: () => calculate('/'), child: Text('/')),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Text(
+              "Result: $result",
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
